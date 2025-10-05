@@ -1,3 +1,3 @@
 ## Edu-Connect
 
-Explore || Learn || Create || || build || Published Chapter
+Explore || Learn || Create || build || Published Chapter

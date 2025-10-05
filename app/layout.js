@@ -1,24 +1,22 @@
-import localFont from "next/font/local";
-import { Inter, Poppins} from 'next/font/google'
-import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+import { dbConnect } from "@/services/mongo";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({subsets: ['latin']});
-const poppins = Inter({subsets: ['latin'], variable: '--font-poppins'})
-
+const inter = Inter({ subsets: ["latin"] });
+const poppins = Inter({ subsets: ["latin"], variable: "--font-poppins" });
 
 export const metadata = {
   title: "EduConnect - World best learning platform",
   description: "Explore || Learn || Build || Share",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const conn = await dbConnect();
   return (
     <html lang="en">
-      <body
-        className={cn(inter.className, poppins.className)}
-      >
+      <body className={cn(inter.className, poppins.className)}>
         {children}
         <Toaster richColors position="top-center" />
       </body>
