@@ -4,6 +4,7 @@ import * as React from "react";
 import { useLockBody } from "@/hooks/use-lock-body";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { Button, buttonVariants } from "./ui/button";
 import {
   DropdownMenu,
@@ -16,6 +17,9 @@ export function MobileNav({ items, children }) {
   useLockBody();
   const [loginSession, setLoginSession] = React.useState(null);
   const { data: session } = useSession();
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/login");
+  }
   console.log(loginSession);
   React.useEffect(() => {
     console.log("test");
