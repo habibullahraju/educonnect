@@ -78,27 +78,27 @@ export async function getCourseDetailsByInstructor(instructorId) {
     })
   );
 
-  const totalEnrollments = enrollments.reduce((item, currentValue) => {
-    return item.length + currentValue.length;
-  });
+  const totalEnrollments = enrollments.reduce(function (acc, obj) {
+    return acc + obj.length;
+  }, 0);
 
-    const testimonials = await Promise.all(
-        courses.map(async (course) => {
-          const testimonial = await getTestimonialsForCourse(course._id.toString());
-          return testimonial;
-        })
-      );
+  const testimonials = await Promise.all(
+    courses.map(async (course) => {
+      const testimonial = await getTestimonialsForCourse(course._id.toString());
+      return testimonial;
+    })
+  );
 
-      const totalTestimonials = testimonials.flat();
-       const avgRating = (totalTestimonials.reduce(function (acc, obj) {
-            return acc + obj.rating;
-      }, 0)) / totalTestimonials.length;
-
+  const totalTestimonials = testimonials.flat();
+  const avgRating =
+    totalTestimonials.reduce(function (acc, obj) {
+      return acc + obj.rating;
+    }, 0) / totalTestimonials.length;
 
   return {
-    "courses": courses.length,
-    "enrollments": totalEnrollments,
-    "reviews": totalTestimonials.length,
-    "ratings": avgRating.toPrecision(2)
+    courses: courses.length,
+    enrollments: totalEnrollments,
+    reviews: totalTestimonials.length,
+    ratings: avgRating.toPrecision(2),
   };
 }
