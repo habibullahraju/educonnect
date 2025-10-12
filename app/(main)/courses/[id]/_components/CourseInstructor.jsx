@@ -1,6 +1,9 @@
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { getCourseDetailsByInstructor } from "@/queries/courses";
 import { MessageSquare, Presentation, Star, UsersRound } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function CourseInstructor({ course }) {
   const instructor = course?.instructor;
@@ -8,7 +11,7 @@ export default async function CourseInstructor({ course }) {
   const courseDetailsByInstructor = await getCourseDetailsByInstructor(
     instructor?._id.toString()
   );
-  console.log(courseDetailsByInstructor);
+
   return (
     <div className="bg-gray-50 rounded-md p-8">
       <div className="md:flex md:gap-x-5 mb-8">
@@ -48,6 +51,12 @@ export default async function CourseInstructor({ course }) {
               </li>
             </ul>
           </div>
+          <Link
+            href="/inst-profile"
+            className={`${cn(buttonVariants({ variant: "default", size: "lg" }))} mt-3`}
+          >
+            Instructor Profile
+          </Link>
         </div>
       </div>
       <p className="text-gray-600">{instructor?.bio}</p>
