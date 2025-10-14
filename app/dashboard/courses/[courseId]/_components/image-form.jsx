@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // import axios from "axios";
 import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
@@ -19,6 +19,7 @@ const formSchema = z.object({
 });
 
 export const ImageForm = ({ initialData, courseId }) => {
+  const [file, setFile] = useState(null);
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -33,6 +34,34 @@ export const ImageForm = ({ initialData, courseId }) => {
       toast.error("Something went wrong");
     }
   };
+  useEffect(() => {
+    if (file) {
+      async function uploadFile() {
+        try {
+          const formData = new FormData();
+          formData.append("files", file[0]);
+          formData.append("destination", `./public/assets/images/courses`);
+          formData.append("courseId", courseId);
+
+          const response = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.text();
+          console.log(result);
+          if (response.status === 200) {
+            initialData.imageUrl = `/assets/images/courses/${file[0].path}`;
+            toast.success(result);
+            toggleEdit();
+            router.refresh();
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+      }
+      uploadFile();
+    }
+  }, [file]);
 
   return (
     <div className="mt-6 border bg-gray-50 rounded-md p-4">
@@ -71,7 +100,7 @@ export const ImageForm = ({ initialData, courseId }) => {
         ))}
       {isEditing && (
         <div>
-          <UploadDropzone />
+          <UploadDropzone onUpload={(file) => setFile(file)} />
           <div className="text-xs text-muted-foreground mt-4">
             16:9 aspect ratio recommended
           </div>
