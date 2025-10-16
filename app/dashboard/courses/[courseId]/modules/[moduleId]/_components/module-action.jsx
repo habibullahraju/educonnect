@@ -2,39 +2,40 @@
 
 import { Trash } from "lucide-react";
 
+import { changeModulePublishedState, deleteModule } from "@/app/actions/module";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { changeCoursePublishedState, deleteCourse } from "@/app/actions/course";
 
-export const CourseActions = ({ courseId, isActive }) => {
+export const ModuleActions = ({ module, courseId }) => {
   const router = useRouter();
   const [action, setAction] = useState(null);
-  const [published, setPublished] = useState(isActive);
+  const [published, setPublished] = useState(module?.active);
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       switch (action) {
         case "change-action": {
-          const activeState = await changeCoursePublishedState(courseId);
+          const activeState = await changeModulePublishedState(module.id);
           setPublished(!activeState);
-          toast.success("The course has been update successfully!")
+          toast.success("Module has been updated!");
           router.refresh();
           break;
         }
         case "delete": {
-          if(published){
-            toast.error("A published course can't be DELETED.First unpublished it, after that you can DELETE it")
-          }else{
-            await deleteCourse(courseId);
-            toast.success('Course has been deleted successfully');
-            router.push("/dashboard/courses");
+          if (published) {
+            toast.error(
+              "A published module can't be DELETED.First unpublished it, after that you can DELETE it"
+            );
+          } else {
+            await deleteModule(module.id, courseId);
+            router.push(`/dashboard/courses/${courseId}`);
           }
           break;
         }
         default: {
-          throw new Error("invalid course action");
+          throw new Error("Invalid lesson action!");
         }
       }
     } catch (error) {

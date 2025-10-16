@@ -4,8 +4,8 @@ import { replaceMongoIdInArray } from "@/lib/convertData";
 import { getModule } from "@/queries/modules";
 import { ArrowLeft, BookOpenCheck, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
-import { CourseActions } from "../../_components/course-action";
 import { LessonForm } from "./_components/lesson-form";
+import { ModuleActions } from "./_components/module-action";
 import { ModuleTitleForm } from "./_components/module-title-form";
 
 const Module = async ({ params: { courseId, moduleId } }) => {
@@ -13,13 +13,15 @@ const Module = async ({ params: { courseId, moduleId } }) => {
   const lessons = replaceMongoIdInArray(modules.lessonIds).sort(
     (a, b) => a.order - b.order
   );
-  console.log(lessons);
+
   return (
     <>
-      <AlertBanner
-        label="This module is unpublished. It will not be visible in the course."
-        variant="warning"
-      />
+      {!modules?.active && (
+        <AlertBanner
+          label="This module is unpublished. It will not be visible in the course."
+          variant="warning"
+        />
+      )}
 
       <div className="p-6">
         <div className="flex items-center justify-between">
@@ -32,7 +34,7 @@ const Module = async ({ params: { courseId, moduleId } }) => {
               Back to course setup
             </Link>
             <div className="flex items-center justify-end">
-              <CourseActions />
+              <ModuleActions module={modules} courseId={courseId} />
             </div>
           </div>
         </div>
@@ -54,7 +56,11 @@ const Module = async ({ params: { courseId, moduleId } }) => {
                 <IconBadge icon={BookOpenCheck} />
                 <h2 className="text-xl">Module Lessons</h2>
               </div>
-              <LessonForm initialData={lessons} moduleId={moduleId} />
+              <LessonForm
+                initialData={lessons}
+                courseId={courseId}
+                moduleId={moduleId}
+              />
             </div>
           </div>
           <div>

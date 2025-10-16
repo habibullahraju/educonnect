@@ -2,43 +2,42 @@
 
 import { Trash } from "lucide-react";
 
+import { changeLessonPublishedState, deleteLesson } from "@/app/actions/lesson";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { changeCoursePublishedState, deleteCourse } from "@/app/actions/course";
 
-export const CourseActions = ({ courseId, isActive }) => {
-  const router = useRouter();
+export const LessonActions = ({ lesson, moduleId, onDelete }) => {
   const [action, setAction] = useState(null);
-  const [published, setPublished] = useState(isActive);
+  const [published, setPublished] = useState(lesson?.active);
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       switch (action) {
         case "change-action": {
-          const activeState = await changeCoursePublishedState(courseId);
+          const activeState = await changeLessonPublishedState(lesson.id);
           setPublished(!activeState);
-          toast.success("The course has been update successfully!")
-          router.refresh();
+          toast.success("Lesson has been updated!");
           break;
         }
         case "delete": {
-          if(published){
-            toast.error("A published course can't be DELETED.First unpublished it, after that you can DELETE it")
-          }else{
-            await deleteCourse(courseId);
-            toast.success('Course has been deleted successfully');
-            router.push("/dashboard/courses");
+          if (published) {
+            toast.error(
+              "A published lesson can't be DELETED.First unpublished it, after that you can DELETE it"
+            );
+          } else {
+            await deleteLesson(lesson.id, moduleId);
+            onDelete();
+            toast.success("Lesson has been DELETED successfully");
           }
           break;
         }
         default: {
-          throw new Error("invalid course action");
+          throw new Error("Invalid lesson action!");
         }
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message);
     }
   };
   return (
