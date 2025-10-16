@@ -39,7 +39,6 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
       loggedInUser?.id,
       "stripe"
     );
-    console.log(enrolled);
     //send mail for enrollment
     const instructorName = `${course?.instructor?.firstName} ${course?.instructor?.lastName}`;
     const instructorEmail = course?.instructor?.email;
