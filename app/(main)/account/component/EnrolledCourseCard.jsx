@@ -1,5 +1,7 @@
+import { CourseProgress } from "@/components/course-progress";
 import { Badge } from "@/components/ui/badge";
 import { getCategoryDetails } from "@/queries/categories";
+import { getCourseDetails } from "@/queries/courses";
 import { getAReport } from "@/queries/reports";
 import { BookOpen } from "lucide-react";
 import Image from "next/image";
@@ -15,6 +17,14 @@ export default async function EnrolledCourseCard({ enrollment }) {
   const quizzes = report?.quizAssessment?.assessments;
   const totalQuizess = quizzes?.length;
   const quizessTaken = quizzes.filter((q) => q.attempted);
+  //course details by id
+
+  const courseDetails = await getCourseDetails(enrollment?.course._id);
+  const totalModuleCount = courseDetails?.modules.length;
+  //total progress
+  const totalProgress = totalModuleCount
+    ? (totalCompletedModeules / totalModuleCount) * 100
+    : 0;
 
   // Find how many quizzes answered correct
 
@@ -102,11 +112,11 @@ export default async function EnrolledCourseCard({ enrollment }) {
           </p>
         </div>
 
-        {/* <CourseProgress
-						size="sm"
-						value={80}
-						variant={110 === 100 ? "success" : ""}
-					/> */}
+        <CourseProgress
+          size="sm"
+          value={totalProgress}
+          variant={110 === 100 ? "success" : ""}
+        />
       </div>
     </div>
   );

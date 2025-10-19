@@ -142,7 +142,7 @@ export const AddQuizForm = ({ quizSetId }) => {
           isTrue: false,
         },
       });
-      toggleEdit();
+     // toggleEdit();
       router.refresh();
 
       }else{

@@ -1,26 +1,17 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { cn } from "@/lib/utils";
-import {
-  BookCheck,
-  Clock10,
-  FileQuestion,
-  NotepadText,
-  Radio,
-  StickyNote,
-  Tv,
-  Video,
-} from "lucide-react";
+import { Accordion } from "@/components/ui/accordion";
+import { BookCheck, Clock10, Radio } from "lucide-react";
 import CourseModuleList from "./modules/CourseModuleList";
 
 export default function CourseCurriculum({ course }) {
-  const totalDuration = course?.modules?.reduce(function (acc, obj) {
-    return acc + obj.duration;
-  }, 0);
+  const totalDuration = course?.modules
+    .map((item) => {
+      return item.lessonIds.reduce(function (acc, obj) {
+        return acc + obj.duration;
+      }, 0);
+    })
+    .reduce(function (acc, obj) {
+      return acc + obj;
+    }, 0);
   return (
     <>
       <div class="flex gap-x-5 items-center justify-center flex-wrap mt-4 mb-6 text-gray-600 text-sm">
@@ -30,7 +21,7 @@ export default function CourseCurriculum({ course }) {
         </span>
         <span className="flex items-center gap-1.5">
           <Clock10 className="w-4 h-4" />
-          {(totalDuration / 60).toPrecision(2)}+ Hours
+          {(totalDuration / 3660).toPrecision(2)}+ Hours
         </span>
         <span className="flex items-center gap-1.5">
           <Radio className="w-4 h-4" />4 Live Class
