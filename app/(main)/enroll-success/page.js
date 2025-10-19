@@ -58,7 +58,7 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
     const responseEmail = await sendEmails(emailToSend);
     console.log(responseEmail);
   }
-  console.log("raju", session_id, courseId);
+
   return (
     <div className="h-full w-full flex-1 flex flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-6 max-w-[600px] text-center">
@@ -76,7 +76,7 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
             <Link href="/courses">Browse Courses</Link>
           </Button>
           <Button asChild variant="outline" size="sm">
-            <Link href="/think-in-a-redux-way/introduction">Play Course</Link>
+            <Link href={`/courses/${courseId}/lesson`}>Play Course</Link>
           </Button>
         </div>
       </div>

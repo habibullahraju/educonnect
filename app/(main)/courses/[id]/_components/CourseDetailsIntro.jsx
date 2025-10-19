@@ -6,11 +6,9 @@ import { hasEnrollmentsForCourse } from "@/queries/enrollments";
 import { getUserByEmail } from "@/queries/users";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function CourseDetailsIntro({ course }) {
   const session = await auth();
-  if (!session?.user?.email) redirect("/login");
   const loggedInUser = await getUserByEmail(session?.user?.email);
   const hasEnrollments = await hasEnrollmentsForCourse(
     course?.id,
@@ -34,23 +32,21 @@ export default async function CourseDetailsIntro({ course }) {
               </p>
 
               <div className="mt-6 flex items-center justify-center flex-wrap gap-3">
-                {
-                  hasEnrollments ? (
-                    <Link
-                  href=""
-                  className={cn(
-                    buttonVariants({ variant: "default", size: "lg" })
-                  )}
-                >
-                  Access Course
-                </Link>
-                  ): (
-                    <EnrollCourse courseId={course?.id} />
-                  )
-                }
-                
+                {hasEnrollments ? (
+                  <Link
+                    href=""
+                    className={cn(
+                      buttonVariants({ variant: "default", size: "lg" })
+                    )}
+                  >
+                    Access Course
+                  </Link>
+                ) : (
+                  <EnrollCourse courseId={course?.id} />
+                )}
+
                 <Link
-                  href=""
+                  href={`/courses/${course.id}/lesson`}
                   className={cn(
                     buttonVariants({ variant: "outline", size: "lg" })
                   )}
