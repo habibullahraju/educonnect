@@ -23,3 +23,11 @@ export async function getModule(moduleId) {
     throw new Error(error);
   }
 }
+export async function getModulesBySlug(moduleSlug) {
+  try {
+    const modules = await Module.findOne({ slug: moduleSlug }).lean();
+    return replaceMongoIdInObject(modules);
+  } catch (err) {
+    throw new Error(err);
+  }
+}
