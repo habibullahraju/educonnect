@@ -2,20 +2,27 @@ import { CourseProgress } from "@/components/course-progress";
 import { getLoggedInUser } from "@/lib/loggedInUser";
 import { Watch } from "@/model/watch-model";
 import { getCourseDetails } from "@/queries/courses";
+import { getAReport } from "@/queries/reports";
 import DownloadCertificate from "./download-certificate";
 import GiveReview from "./give-review";
+import Quiz from "./Quiz";
 import SidebarModules from "./sidebar-modules";
-import { getAReport } from "@/queries/reports";
 
 export const CourseSidebar = async ({ courseId }) => {
   const loggedInUser = await getLoggedInUser();
   const course = await getCourseDetails(courseId);
-  const report = await getAReport({course: courseId, student: loggedInUser.id});
-  const tatalCompletedModule = report?.totalCompletedModeules ? report.totalCompletedModeules.length : 0;
+  const report = await getAReport({
+    course: courseId,
+    student: loggedInUser.id,
+  });
+  const tatalCompletedModule = report?.totalCompletedModeules
+    ? report.totalCompletedModeules.length
+    : 0;
   const totalModule = course.modules ? course?.modules.length : 0;
 
-  const totalProgress = (totalModule > 0 ) ? (tatalCompletedModule/totalModule) * 100 : 0;
-console.log('raju',{tatalCompletedModule, totalModule, totalProgress})
+  const totalProgress =
+    totalModule > 0 ? (tatalCompletedModule / totalModule) * 100 : 0;
+  console.log("raju", { tatalCompletedModule, totalModule, totalProgress });
   const updatedModules = await Promise.all(
     course?.modules.map(async (module) => {
       const moduleId = module._id.toString();
@@ -41,6 +48,11 @@ console.log('raju',{tatalCompletedModule, totalModule, totalProgress})
   );
 
   console.log({ updatedModules });
+
+  const quizSet = course?.quizSet;
+  const isQuizComplete = report?.quizAssessment ? true : false;
+  console.log({ quizSet });
+  console.log({ isQuizComplete });
   return (
     <>
       <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
@@ -53,8 +65,14 @@ console.log('raju',{tatalCompletedModule, totalModule, totalProgress})
           }
         </div>
         <SidebarModules courseId={courseId} module={updatedModules} />
+        <div className="w-full px-4 lg:px-14 pt-10 border-t">
+          {quizSet && <Quiz courseId={courseId} quizSet={quizSet} isTaken={isQuizComplete} />}
+        </div>
         <div className="w-full px-6">
-          <DownloadCertificate courseId={courseId} totalProgress={totalProgress} />
+          <DownloadCertificate
+            courseId={courseId}
+            totalProgress={totalProgress}
+          />
           <GiveReview courseId={courseId} />
         </div>
       </div>
