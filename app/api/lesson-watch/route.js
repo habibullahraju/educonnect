@@ -26,7 +26,7 @@ export async function POST(request) {
   const lesson = await getLesson(lessonId);
   const loggedinUser = await getLoggedInUser();
   const modules = await getModulesBySlug(moduleSlug);
-  console.log({modules})
+  
 
   if (!loggedinUser) {
     return new NextResponse(`You are not authenticated.`, {
