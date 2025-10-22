@@ -7,7 +7,7 @@ import { FileQuestion, NotepadText, Radio, Video } from "lucide-react";
 import CourseLessonList from "./CourseLessonList";
 
 export default function CourseModuleList({ module }) {
-  console.log(module);
+
   const totalDuration = module?.lessonIds?.reduce(function (acc, obj) {
     return acc + obj.duration;
   }, 0);

@@ -22,7 +22,7 @@ export const CourseSidebar = async ({ courseId }) => {
 
   const totalProgress =
     totalModule > 0 ? (tatalCompletedModule / totalModule) * 100 : 0;
-  console.log("raju", { tatalCompletedModule, totalModule, totalProgress });
+
   const updatedModules = await Promise.all(
     course?.modules.map(async (module) => {
       const moduleId = module._id.toString();
@@ -66,7 +66,13 @@ export const CourseSidebar = async ({ courseId }) => {
         </div>
         <SidebarModules courseId={courseId} module={updatedModules} />
         <div className="w-full px-4 lg:px-14 pt-10 border-t">
-          {quizSet && <Quiz courseId={courseId} quizSet={quizSet} isTaken={isQuizComplete} />}
+          {quizSet && (
+            <Quiz
+              courseId={courseId}
+              quizSet={quizSet}
+              isTaken={isQuizComplete}
+            />
+          )}
         </div>
         <div className="w-full px-6">
           <DownloadCertificate
