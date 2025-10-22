@@ -5,9 +5,19 @@ import { getLesson } from "@/queries/lessons";
 import { getModulesBySlug } from "@/queries/modules";
 
 import { Watch } from "@/model/watch-model";
+import { createWatchReport } from "@/queries/reports";
 
 const STARTED = "started";
 const COMPLETED = "completed";
+async function updateReport(userId, courseId, moduleId, lessonId) {
+  try {
+    //call for creating watch report
+    await createWatchReport({userId, courseId, moduleId, lessonId})
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 
 export async function POST(request) {
   const { courseId, lessonId, moduleSlug, state, lastTime } =
@@ -60,12 +70,14 @@ export async function POST(request) {
       if (!found) {
         watchEntry["created_at"] = Date.now();
         await Watch.create(watchEntry);
+        await updateReport(loggedinUser.id, courseId, modules.id, lessonId)
       } else {
         if (found.state === STARTED) {
           watchEntry["modified_at"] = Date.now();
           await Watch.findByIdAndUpdate(found._id, {
             state: COMPLETED,
           });
+          await updateReport(loggedinUser.id, courseId, modules.id, lessonId)
         }
       }
     }

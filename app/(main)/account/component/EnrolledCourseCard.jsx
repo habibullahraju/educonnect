@@ -16,7 +16,7 @@ export default async function EnrolledCourseCard({ enrollment }) {
   const totalCompletedModeules = report?.totalCompletedModeules?.length;
   const quizzes = report?.quizAssessment?.assessments;
   const totalQuizess = quizzes?.length;
-  const quizessTaken = quizzes.filter((q) => q.attempted);
+  const quizessTaken = quizzes?.filter((q) => q.attempted);
   //course details by id
 
   const courseDetails = await getCourseDetails(enrollment?.course._id);
@@ -29,7 +29,7 @@ export default async function EnrolledCourseCard({ enrollment }) {
   // Find how many quizzes answered correct
 
   const totalCorrect = quizessTaken
-    .map((quiz) => {
+    ?.map((quiz) => {
       const item = quiz.options;
       return item.filter((o) => {
         return o.isCorrect === true && o.isSelected === true;
