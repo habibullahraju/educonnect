@@ -54,7 +54,7 @@ console.log('raju',{tatalCompletedModule, totalModule, totalProgress})
         </div>
         <SidebarModules courseId={courseId} module={updatedModules} />
         <div className="w-full px-6">
-          <DownloadCertificate courseId={courseId} />
+          <DownloadCertificate courseId={courseId} totalProgress={totalProgress} />
           <GiveReview courseId={courseId} />
         </div>
       </div>
